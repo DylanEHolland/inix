@@ -2,7 +2,7 @@
 #include <terminal.h>
 
 void initProcessManager() {
-    terminalWritestring("Starting process manager...");
+    terminalWriteString("Starting process manager...");
 }
 
 void spawnProcessZero() {

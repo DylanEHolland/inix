@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 /* Hardware text mode color constants. */
-enum vga_color {
+enum vgaColor {
 	VGA_COLOR_BLACK = 0,
 	VGA_COLOR_BLUE = 1,
 	VGA_COLOR_GREEN = 2,
@@ -22,22 +22,22 @@ enum vga_color {
 	VGA_COLOR_WHITE = 15,
 };
 
-struct kstring {
+struct kString {
 	char *buffer;
 	int length;
 };
 
-uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg);
-uint16_t vga_entry(unsigned char uc, uint8_t color);
+uint8_t vgaEntryColor(enum vgaColor fg, enum vgaColor bg);
+uint16_t vgaEntry(unsigned char uc, uint8_t color);
 
 
-void terminalWritestring(const char* data);
-void terminal_write(const char* data, size_t size);
-void terminal_putchar(char c);
-void terminal_putentryat(char c, uint8_t color, size_t x, size_t y);
+void terminalWriteString(const char* data);
+void terminalWrite(const char* data, size_t size);
+void terminalPutChar(char c);
+void terminalPutEntryAt(char c, uint8_t color, size_t x, size_t y);
 void writeStringToSerial(char *str, int len);
 
 void outputInitialize(void);
-int is_transmit_empty();
+int isTransmitEmpty();
 void writeSerial(char a);
 void initSerial();

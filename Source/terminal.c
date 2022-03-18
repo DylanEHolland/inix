@@ -5,51 +5,51 @@
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
  
-size_t terminal_row;
-size_t terminal_column;
-uint8_t terminal_color;
-uint16_t* terminal_buffer;
+size_t terminalRow;
+size_t terminalColumn;
+uint8_t terminalColor;
+uint16_t* terminalBuffer;
 
-void terminalWritestring(const char* data) 
+void terminalWriteString(const char* data) 
 {
-	terminal_write(data, strlen(data));
+	terminalWrite(data, strlen(data));
 	writeStringToSerial((char *)data, strlen(data));
 }
 
-void terminal_setcolor(uint8_t color) 
+void terminalSetColor(uint8_t color) 
 {
-	terminal_color = color;
+	terminalColor = color;
 }
  
-void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) 
+void terminalPutEntryAt(char c, uint8_t color, size_t x, size_t y) 
 {
 	const size_t index = y * VGA_WIDTH + x;
-	terminal_buffer[index] = vga_entry(c, color);
+	terminalBuffer[index] = vgaEntry(c, color);
 }
  
-void terminal_putchar(char c) 
+void terminalPutChar(char c) 
 {
-	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-	if (++terminal_column == VGA_WIDTH) {
-		terminal_column = 0;
-		if (++terminal_row == VGA_HEIGHT)
-			terminal_row = 0;
+	terminalPutEntryAt(c, terminalColor, terminalColumn, terminalRow);
+	if (++terminalColumn == VGA_WIDTH) {
+		terminalColumn = 0;
+		if (++terminalRow == VGA_HEIGHT)
+			terminalRow = 0;
 	}
 }
  
-void terminal_write(const char* data, size_t size)
+void terminalWrite(const char* data, size_t size)
 {
 	for (size_t i = 0; i < size; i++) {
-		terminal_putchar(data[i]);
+		terminalPutChar(data[i]);
 	}
 }
  
-uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) 
+uint8_t vgaEntryColor(enum vgaColor fg, enum vgaColor bg) 
 {
 	return fg | bg << 4;
 }
 
-uint16_t vga_entry(unsigned char uc, uint8_t color) 
+uint16_t vgaEntry(unsigned char uc, uint8_t color) 
 {
 	return (uint16_t) uc | (uint16_t) color << 8;
 }
@@ -57,14 +57,15 @@ uint16_t vga_entry(unsigned char uc, uint8_t color)
 
 void outputInitialize(void) 
 {
-	terminal_row = 0;
-	terminal_column = 0;
-	terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-	terminal_buffer = (uint16_t*) 0xB8000;
+	terminalRow = 0;
+	terminalColumn = 0;
+	terminalColor = vgaEntryColor(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+	terminalBuffer = (uint16_t*) 0xB8000;
 	for (size_t y = 0; y < VGA_HEIGHT; y++) {
 		for (size_t x = 0; x < VGA_WIDTH; x++) {
 			const size_t index = y * VGA_WIDTH + x;
-			terminal_buffer[index] = vga_entry(' ', terminal_color);
+			terminalBuffer[index] = \
+				vgaEntry(' ', terminalColor);
 		}
 	}
 }
@@ -92,12 +93,12 @@ void initSerial() {
    outb(PORT + 4, 0x0F);
 }
 
-int is_transmit_empty() {
+int isTransmitEmpty() {
    return inb(PORT + 5) & 0x20;
 }
  
 void writeSerial(char a) {
-   while (is_transmit_empty() == 0);
+   while (isTransmitEmpty() == 0);
  
    outb(PORT,a);
 }
