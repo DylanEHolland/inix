@@ -3,21 +3,21 @@ LIB_SOURCES=$(wildcard Library/*.c)
 TARGET_ARCH="i686-elf"
 AS=$(TARGET_ARCH)-as
 CC=$(TARGET_ARCH)-gcc -std=c17
-
+CFLAGS=-I./include -std=c17 -ffreestanding -O2 -Wall -Wextra
 
 all: build
 
 build_lib: obj_dir
 	@-for f in $(LIB_SOURCES); do \
 		OBJ_NAME=Build/`echo $$f | cut -d . -f 1 | cut -d / -f 2`.o && \
-		$(CC) -c $$f -o $$OBJ_NAME -I./Library -std=c17 -ffreestanding -O2 -Wall -Wextra; \
+		$(CC) -c $$f -o $$OBJ_NAME $(CFLAGS); \
 	done;
 
 build: build_lib
 	@-$(AS) Source/boot.S -o Build/boot.o;
 	@-for f in $(PREKERNEL_SOURCES); do \
 		OBJ_NAME=Build/`echo $$f | cut -d . -f 1 | cut -d / -f 2`.o && \
-		$(CC) -c $$f -o $$OBJ_NAME -I./Library -std=c17 -ffreestanding -O2 -Wall -Wextra; \
+		$(CC) -c $$f -o $$OBJ_NAME $(CFLAGS); \
 	done;
 	@-$(CC) -T Source/linker.ld -o Build/prekernel.bin -ffreestanding -O2 -nostdlib build/*.o -lgcc;
 
