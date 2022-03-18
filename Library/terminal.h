@@ -31,9 +31,13 @@ uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg);
 uint16_t vga_entry(unsigned char uc, uint8_t color);
 
 
-void terminal_writestring(const char* data);
+void terminalWritestring(const char* data);
 void terminal_write(const char* data, size_t size);
 void terminal_putchar(char c);
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y);
+void writeStringToSerial(char *str, int len);
 
-void output_initialize(void);
+void outputInitialize(void);
+int is_transmit_empty();
+void writeSerial(char a);
+void initSerial();

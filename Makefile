@@ -2,7 +2,7 @@ PREKERNEL_SOURCES=$(wildcard Source/*.c)
 LIB_SOURCES=$(wildcard Library/*.c)
 TARGET_ARCH="i686-elf"
 AS=$(TARGET_ARCH)-as
-CC=$(TARGET_ARCH)-gcc
+CC=$(TARGET_ARCH)-gcc -std=c17
 
 
 all: build
@@ -30,4 +30,4 @@ obj_dir:
 	@-[ ! -d Build ] && mkdir -p Build || exit 0;
 
 run:
-	qemu-system-x86_64 -kernel build/prekernel.bin;
+	@-qemu-system-x86_64 -kernel build/prekernel.bin -serial stdio; 
