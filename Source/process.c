@@ -8,3 +8,9 @@ void initProcessManager() {
 void spawnProcessZero() {
 
 }
+
+void runProcess(struct process *proc) {
+    terminalWriteString("Starting process...");
+    terminalPutChar((char)proc->id);
+    // proc->bytes;
+}

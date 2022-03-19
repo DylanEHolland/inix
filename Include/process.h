@@ -8,5 +8,6 @@ struct process {
 
 void initProcessManager();
 void spawnProcessZero();
+void runProcess(struct process *proc);
 
 #endif
